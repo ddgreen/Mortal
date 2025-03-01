@@ -17,6 +17,97 @@ Mortal ([凡夫](https://www.mdbg.net/chinese/dictionary?wdqb=%E5%87%A1%E5%A4%AB
 
 Read the [**Documentation**](https://mortal.ekyu.moe) for everything about this work.
 
+## Tsumogiri Self-Play
+
+### コンパイル方法
+
+Tsumogiri自己対戦プログラムをコンパイルするには、以下のコマンドを実行します：
+
+```bash
+# Python依存関係なしでビルド
+cargo build --bin simple_rule_self_play --no-default-features
+```
+
+### 実行方法
+
+#### 単一実行
+
+1回の実行で2つのゲームを処理します：
+
+```bash
+./target/debug/simple_rule_self_play
+```
+
+実行すると、`game_logs`ディレクトリに以下の形式でゲームログが生成されます：
+- `game_{timestamp}_{game_index}.json`
+
+#### 複数回実行
+
+複数回の実行を安定して行うには、付属のシェルスクリプトを使用します：
+
+```bash
+# スクリプトに実行権限を付与
+chmod +x run_multiple.sh
+
+# スクリプトを実行
+./run_multiple.sh
+```
+
+このスクリプトは、各実行の間に1秒の遅延を入れることで、リソース競合を回避します。
+
+### ゲームログの形式
+
+生成されるゲームログは[mjai形式](https://github.com/mjx-project/mjx/blob/master/docs/mjai.md)のJSONファイルで、各行が1つのイベント（配牌、ツモ、打牌など）を表します。これらのログは、麻雀AIの学習データとして使用できます。
+
+### 注意事項
+
+- bashのfor文で直接複数回実行すると、ハングアップする可能性があります。その場合は`run_multiple.sh`スクリプトを使用してください。
+- 各実行は独立しており、前の実行の結果が次の実行に影響することはありません。
+
+## SimpleRuleAgent Self-Play
+
+SimpleRuleAgentは基本的なルールベースの戦略を実装した麻雀AIで、以下の特徴があります：
+- できるだけ早くテンパイに到達し、リーチを宣言する
+- 他のプレイヤーがリーチを宣言した場合は防御的に打牌する
+
+### コンパイル方法
+
+SimpleRuleAgent自己対戦プログラムをコンパイルするには、以下のコマンドを実行します：
+
+```bash
+# Python依存関係なしでビルド
+cargo build --bin simple_rule_vs_simple_rule --no-default-features
+```
+
+### 実行方法
+
+#### 単一実行
+
+付属のシェルスクリプトを使用して実行します：
+
+```bash
+# スクリプトに実行権限を付与
+chmod +x run_simple_rule_vs_simple_rule.sh
+
+# スクリプトを実行
+./run_simple_rule_vs_simple_rule.sh
+```
+
+実行すると、`game_logs`ディレクトリに以下の形式でゲームログが生成されます：
+- `game_{timestamp}_{game_index}.json`
+
+### ゲームログの形式
+
+Tsumogiri Self-Playと同様に、生成されるゲームログは[mjai形式](https://github.com/mjx-project/mjx/blob/master/docs/mjai.md)のJSONファイルです。これらのログは、より高度な麻雀AIの学習データとして使用できます。
+
+### カスタマイズ
+
+ソースコード（`libriichi/src/bin/simple_rule_vs_simple_rule.rs`）を編集することで、以下のようなカスタマイズが可能です：
+
+- プレイヤーの配置を変更する（indexesの配列を編集）
+- 異なるゲームバリエーションのためにシードを変更する
+- ゲーム数を増やす（indexesとseedsを追加）
+
 ## Okay cool now give me the weights!
 Read [this post](https://gist.github.com/Equim-chan/cf3f01735d5d98f1e7be02e94b288c56) for details regarding this topic.
 

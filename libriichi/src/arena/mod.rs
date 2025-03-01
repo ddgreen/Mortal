@@ -1,7 +1,7 @@
 mod board;
-mod game;
+pub mod game;
 mod one_vs_three;
-mod result;
+pub mod result;
 mod two_vs_two;
 
 pub use board::Board;
